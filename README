@@ -1,4 +1,4 @@
-glwars is a student project from waaaaaay back in the days when I was wee.
+glwars is a student project from waaaaaay back in the days when i was wee.
 if my memory servers me correctly, this was done during my time at the Prussian Academy of Automatic Machines, ca. ~1844.
 
 you get to fly a little ship and shoot lasers at one other person in a little ship on your lan!
@@ -21,8 +21,11 @@ space:	fires lasers!
 
 x, d, k: various debug funcs? 
 
-2016-09-24: compiles and works, but w.o. threads/net
+the green bar on the left is your remaining shield strength
+the blue bar on the right is your remaining pew pew!
+the wee ships up top are your remaing lives
 
+2016-09-24: compiles and works, but w.o. threads/net
 
 todo:
 make threads and net work again
