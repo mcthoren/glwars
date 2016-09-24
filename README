@@ -1,3 +1,11 @@
-A student project from waaaaaay back in the days when I was wee.
-
+Glwars is a student project from waaaaaay back in the days when I was wee.
 If my memory is correct, this was done during my time at the Prussian Academy of Automatic Machines, ca. ~1844.
+
+You get to fly a little ship and shoot lasers at one other person in a little ship on your lan!
+
+Iirc my primary reasons for making this were:
+a) i needed a few more credits
+b) i wanted to play with sockets and threads at the same time
+c) and i mostly wanted to fly a little space shit around and shoot lasers!
+
+I though i would revisit it and see if could do update it a bit. It currently reflects some pretty poor coding practices :<
