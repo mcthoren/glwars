@@ -10,7 +10,9 @@ c) and i mostly wanted to fly a little space ship around and shoot lasers!
 
 i have to imagine the name glwars has been used at least a bazillion times previously to this
 
-i though i would revisit it and see if could do update it a bit. it currently reflects some pretty poor coding practices :<
+i though i would revisit it and see if could do update it a bit.
+this was originally written for irix, on an sgi o2.
+it currently reflects some pretty poor coding practices :<
 
 keyboard commands:
 arrow keys move
@@ -29,3 +31,4 @@ the wee ships up top are your remaing lives
 
 todo:
 make threads and net work again
+like, validate data, ffs
