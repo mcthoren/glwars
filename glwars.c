@@ -1,13 +1,15 @@
 #include <GL/glut.h>
 #include <stdlib.h>
 #include <math.h>
-#include<sys/types.h>
-#include<sys/socket.h>
-#include<netinet/in.h>
-#include<arpa/inet.h>
-#include<unistd.h>
-#include<pthread.h>
-#include<stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <stdio.h>
+
+#include "glwars.h"
 
 #define BALLB		1
 #define BALLR		2
@@ -54,9 +56,6 @@
 	struct cp cordss, cordsr;
 	int CSIZE = sizeof(struct cp);
 	int SIZE = sizeof(struct sockaddr_in);
-
-void * threadsend(void *);
-void * threadrecv(void *);
 
 void
 init(void)
