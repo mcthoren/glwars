@@ -10,4 +10,19 @@ c) and i mostly wanted to fly a little space shit around and shoot lasers!
 
 I have to imagine the name glwars has been used at least a bazillion times previously to this
 
-I though i would revisit it and see if could do update it a bit. It currently reflects some pretty poor coding practices :<
+I though I would revisit it and see if could do update it a bit. It currently reflects some pretty poor coding practices :<
+
+Keyboard commands:
+Arrow keys move
+q:	quits 
+c:	toggles chase mode view
+a:	toggles autonormals
+space:	fires lasers!
+
+x, d, k: various debug funcs? 
+
+2016-09-24: compiles works w.o. threads/net
+
+
+Todo:
+make threads and net work again
