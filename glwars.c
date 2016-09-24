@@ -9,7 +9,6 @@
 #include<pthread.h>
 #include<stdio.h>
 
-
 #define BALLB		1
 #define BALLR		2
 #define BALLG		3
@@ -44,22 +43,24 @@
         GLfloat mat_shininesshield[] = {30};
 
 
-struct cp{
-        GLfloat x;
-        GLfloat y;
-        GLfloat z;
-	GLint hit;
-};
+	struct cp{
+		GLfloat x;
+		GLfloat y;
+		GLfloat z;
+		GLint hit;
+	};
 
-           //int cordss=69, cordsr=86;
-	   struct cp cordss, cordsr;
-           int CSIZE = sizeof(struct cp);
-           int SIZE = sizeof(struct sockaddr_in);
+	//int cordss = 69, cordsr = 86;
+	struct cp cordss, cordsr;
+	int CSIZE = sizeof(struct cp);
+	int SIZE = sizeof(struct sockaddr_in);
 
 void * threadsend(void *);
 void * threadrecv(void *);
 
-void init(void){
+void
+init(void)
+{
 	GLfloat mat_specularr[] = {SPEC, 0.0, 0.0, ALPH};
 	GLfloat mat_specularg[] = {0.0, SPEC, 0.0, ALPH};
 	GLfloat mat_specularb[] = {0.0, 0.0, SPEC, ALPH};
@@ -185,9 +186,9 @@ void init(void){
 	glEndList();
 
 	glNewList(BALLGRID, GL_COMPILE);
-		for(x=-150.0; x<=150.0; x+=50) {
-			for(y=-150.0; y<=150.0; y+=50) {
-				for(z=-150.0; z<=150.0; z+=50) {
+		for (x = -150.0; x <= 150.0; x += 50) {
+			for(y = -150.0; y <= 150.0; y += 50) {
+				for(z = -150.0; z <= 150.0; z += 50) {
 					glTranslatef(x, y, z);
 					glCallList((((int) fabs((x * 7) * (y * 5) * (z))) % 6) + 1);
 					glTranslatef(-x, -y, -z);
@@ -280,17 +281,19 @@ void init(void){
 	glEnable(GL_DEPTH_TEST);
 }
 
-void display(void){
+void
+display(void)
+{
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,1);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glLoadIdentity();
 
-	if(autonormtoggle == 1) {
+	if (autonormtoggle == 1) {
 		glEnable(GL_AUTO_NORMAL);
 	}
-	else if(autonormtoggle == 0) {
+	else if (autonormtoggle == 0) {
 		glDisable(GL_AUTO_NORMAL);
 	}
 	
@@ -328,7 +331,7 @@ void display(void){
 	if (laser_time > 0) {
 		glDisable(GL_LIGHTING);
 		glColor4f(1.0, 0.0, 1.0, 1.0);
-		if(chasetoggle==0) {
+		if (chasetoggle == 0) {
 			glBegin(GL_LINES);
 			glVertex3f(-0.20, -0.50, 0.0);
 			glVertex3f(0.0, 0.0, -800.0);
@@ -349,149 +352,176 @@ void display(void){
 		//glLoadIdentity();
 	}
 
-///////////////////////left off here///////////////
-        if(chasetoggle==1){
-           glTranslatef(0.0, -2.0, -10.0);
-           glRotatef(barrot/2, 0, 1, 0);
-             glCallList(SHIP);
+	if (chasetoggle == 1) {
+		glTranslatef(0.0, -2.0, -10.0);
+		glRotatef(barrot/2, 0, 1, 0);
+		glCallList(SHIP);
 
-                glEnable (GL_BLEND);
-                glBlendFunc (GL_SRC_ALPHA, GL_DST_ALPHA);
-                glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specularshield);
-                glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat_shininesshield);
-                glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuseshield);
-                glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambientshield);
+		glEnable (GL_BLEND);
+		glBlendFunc (GL_SRC_ALPHA, GL_DST_ALPHA);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specularshield);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat_shininesshield);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuseshield);
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambientshield);
 
-                glTranslatef(0.0, 0.4, 0.0);
-                glutSolidSphere(2.3, 22, 22);
+		glTranslatef(0.0, 0.4, 0.0);
+		glutSolidSphere(2.3, 22, 22);
 
-            glDisable(GL_BLEND);
+		glDisable(GL_BLEND);
 
-           glLoadIdentity();
-          }
-       glutSwapBuffers();
+		glLoadIdentity();
+	}
+	glutSwapBuffers();
 }
 
-void reshape(int w, int h){
-	W=w; H=h;
-	glViewport(0,0,(GLsizei) w, (GLsizei) h);
+void
+reshape(int w, int h)
+{
+	W = w;
+	H = h;
+	glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 	glMatrixMode(GL_PROJECTION);
 	//glLoadIdentity();
 
-        if(w<=H)
-	   gluPerspective(60,(h/w),.70,1200);
-	else
-	   gluPerspective(60,(w/h),.70,1200);
+	if (w <= H) {
+		gluPerspective(60, (h / w), .70, 1200);
+	}
+	else {
+		gluPerspective(60, (w / h), .70, 1200);
+	}
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
 
-void lookmove(){
-
-        mat_specularshield[3]=sin(shieldrot);
-        mat_diffuseshield[3]=sin(shieldrot);
-        lmodel_ambientshield[3]=sin(shieldrot);
-
-	cordss.x=ex=cx;
-	cordss.y=ey=cy;
-	cordss.z=ez=cz;
-	cx=sp*(ex+sin(phi));
-	cy=sp*(ey+sin(ro));
-	cz=sp*(ez+cos(phi));
-
-	if(laser_time>0){
-	   a=cx*cx+cy+cy+cz+cz;
-	   b=2*(cx*(ex-cordsr.x)+cy*(ey-cordsr.y)+cz*(ez-cordsr.z));
-	   c=((ex-cordsr.x)*(ex-cordsr.x))+((ey-cordsr.y)*(ey-cordsr.y))+((ez-cordsr.z)*(ez-cordsr.z))-5.29;
-	   d=a+b+c;
-	   if(d<0) keyboard('k', 1, 1);
-	  }
-
-	if(cordsr.hit!=hit){
-	   hit=cordsr.hit;	
-	   bary0-=0.2;
-	   if(bary0<=0){bary0=2.0; lives--; bary1=2.0; if(lives<=0) exit(1);}
-	  }
-
-	barrot+=10;
-	if(barrot>=3600)barrot=0;
-
-	shieldrot+=0.02;
-	if(shieldrot>=(3.1415926534))shieldrot=0;
-
-   glutPostRedisplay();
-  glutTimerFunc(3, lookmove, 1);
-}
-
-void keyboard(unsigned char key, int x, int y){
-   
-   switch(key){
-     case 27:
-     case 'q':
-     case 'Q':
-	exit(0);
-     break;
-     case 'x':
-     case 'X':
-        sp+=0.030;
-     break;
-     case 'c':
-     case 'C':
-	if(chasetoggle==0) chasetoggle=1;
-	else if(chasetoggle==1) chasetoggle=0;
-     break;
-     case 'a':
-     case 'A':
-        if(autonormtoggle==0) autonormtoggle=1;
-        else if(autonormtoggle==1) autonormtoggle=0;
-     break;
-     case ' ':
-	if(bary1>0.0){ if(bary1<=0.05)bary1=0; else bary1-=0.050;}
-	if(bary1>0.0)laser_time=7;
-     break;
-     case 'd':
-     case 'D':
-	if(cordsr.hit==0) cordsr.hit=1;
-	else if(cordsr.hit==1) cordsr.hit=0;
-     break;
-     case 'k':
-     case 'K':
-        if(cordss.hit==0) cordss.hit=1;
-        else if(cordss.hit==1) cordss.hit=0;
-     break;
-    }
-}
-
-void kbspecial(unsigned char key, int x, int y){
-
-   switch(key){
-        case GLUT_KEY_DOWN:
-           ro+=0.070;
-	break;
-        case GLUT_KEY_UP:
-           ro-=0.070;
-	break;
-	case GLUT_KEY_RIGHT:
-           phi-=.080;
-	   if(phi<=0)phi=360;
-	break;
-        case GLUT_KEY_LEFT:
-           phi+=.080;
-	   if(phi>=360)phi=0;
-	break;
-   }
-}
-
-int main(int argc, char** argv)
+void
+lookmove()
 {
-           pthread_t tid[2];
-           int pt0err=-86, pt1err=-87;
 
-           pt0err=pthread_create(&tid[0], NULL, threadsend, argv[1]);
-           pt1err=pthread_create(&tid[1], NULL, threadrecv, NULL);
-                if(pt0err!=0){ perror("thread0 unhappy"); exit(1);}
-                if(pt1err!=0){ perror("thread1 unhappy"); exit(1);}
+	mat_specularshield[3] = sin(shieldrot);
+	mat_diffuseshield[3] = sin(shieldrot);
+	lmodel_ambientshield[3] = sin(shieldrot);
+
+	cordss.x = ex = cx;
+	cordss.y = ey = cy;
+	cordss.z = ez = cz;
+	cx = sp * (ex + sin(phi));
+	cy = sp * (ey + sin(ro));
+	cz = sp * (ez + cos(phi));
+
+	if (laser_time > 0) {
+		a = cx * cx + cy + cy + cz + cz;
+		b = 2 * (cx * (ex - cordsr.x) + cy * (ey - cordsr.y) + cz * (ez - cordsr.z));
+		c = ((ex - cordsr.x) * (ex - cordsr.x)) + ((ey - cordsr.y) * (ey - cordsr.y)) + ((ez - cordsr.z) * (ez - cordsr.z)) - 5.29;
+		d = a + b + c;
+		if (d < 0) keyboard('k', 1, 1);
+	  }
+
+	if (cordsr.hit != hit) {
+		hit = cordsr.hit;	
+		bary0 -= 0.2;
+		if (bary0 <= 0) {
+			bary0 = 2.0;
+			lives--;
+			bary1 = 2.0;
+			if (lives <= 0) exit(1);
+		}
+	 }
+
+	barrot += 10;
+	if (barrot >= 3600) barrot = 0;
+
+	shieldrot += 0.02;
+	if (shieldrot >= (3.1415926534)) shieldrot = 0;
+
+	glutPostRedisplay();
+	glutTimerFunc(3, lookmove, 1);
+}
+
+void
+keyboard(unsigned char key, int x, int y)
+{
+	switch (key) {
+		case 27:
+		case 'q':
+		case 'Q':
+			exit(0);
+     			break;
+		case 'x':
+		case 'X':
+			sp+=0.030;
+			break;
+		case 'c':
+		case 'C':
+			if (chasetoggle == 0) chasetoggle = 1;
+			else if (chasetoggle == 1) chasetoggle = 0;
+			break;
+		case 'a':
+		case 'A':
+			if (autonormtoggle == 0) autonormtoggle = 1;
+			else if (autonormtoggle == 1) autonormtoggle = 0;
+			break;
+		case ' ':
+			if (bary1 > 0.0){
+				if (bary1 <= 0.05)
+					bary1 = 0;
+				else
+					bary1 -= 0.050;
+			}
+			if (bary1 > 0.0) laser_time=7;
+			break;
+		case 'd':
+		case 'D':
+			if (cordsr.hit == 0) cordsr.hit = 1;
+			else if (cordsr.hit == 1) cordsr.hit = 0;
+			break;
+		case 'k':
+		case 'K':
+			if (cordss.hit == 0) cordss.hit = 1;
+			else if (cordss.hit == 1) cordss.hit = 0;
+			break;
+	}
+}
+
+void
+kbspecial(unsigned char key, int x, int y)
+{
+	switch(key){
+		case GLUT_KEY_DOWN:
+			ro += 0.070;
+			break;
+		case GLUT_KEY_UP:
+			ro -= 0.070;
+			break;
+		case GLUT_KEY_RIGHT:
+			phi -= .080;
+			if (phi <= 0) phi = 360;
+			break;
+		case GLUT_KEY_LEFT:
+			phi += .080;
+			if (phi >= 360) phi = 0;
+			break;
+	}
+}
+
+int
+main(int argc, char** argv)
+{
+	pthread_t tid[2];
+	int pt0err = -86, pt1err = -87;
+
+	pt0err = pthread_create(&tid[0], NULL, threadsend, argv[1]);
+	pt1err = pthread_create(&tid[1], NULL, threadrecv, NULL);
+
+	if (pt0err != 0) {
+		perror("thread0 unhappy");
+		exit(1);
+	}
+
+	if (pt1err != 0) {
+		perror("thread1 unhappy");
+		exit(1);
+	}
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
@@ -508,51 +538,68 @@ int main(int argc, char** argv)
 	glutTimerFunc(3, lookmove, 1);
 	glutMainLoop();
 
-    pthread_join(tid[0], NULL);
-    pthread_join(tid[1], NULL);
-   return(0);
+	pthread_join(tid[0], NULL);
+	pthread_join(tid[1], NULL);
+
+	return 0;
 } 	 
 
-
-void * threadsend(void * arg)
+void *
+threadsend(void * arg)
 {
-           int sockfd, e=0;
-           //struct sockaddr_in tsend = {sizeof (tsend), AF_INET, PORT};
-           struct sockaddr_in tsend = { AF_INET, PORT};
-           struct sockaddr_in tlocal= {AF_INET, INADDR_ANY, INADDR_ANY};
+	int sockfd, e = 0;
+	//struct sockaddr_in tsend = {sizeof (tsend), AF_INET, PORT};
+	struct sockaddr_in tsend = { AF_INET, PORT};
+	struct sockaddr_in tlocal = {AF_INET, INADDR_ANY, INADDR_ANY};
 
-           tsend.sin_addr.s_addr=inet_addr((char *) arg);
+	tsend.sin_addr.s_addr = inet_addr((char *) arg);
 
-           sockfd=socket(AF_INET, SOCK_DGRAM, 0);
-                if(sockfd==-1){ perror("bad sock"); exit(1);}
+	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+	if (sockfd == -1) {
+		perror("bad sock");
+		exit(1);
+	}
 
-           e=bind(sockfd, (struct sockaddr *) &tlocal, SIZE);
-                if(e==-1){ perror("not bound"); close(sockfd); exit(1);}
+	e = bind(sockfd, (struct sockaddr *) &tlocal, SIZE);
+	if (e == -1) {
+		perror("not bound");
+		close(sockfd);
+		exit(1);
+	}
 
-           while(1){
-                 usleep(SLEEPWAIT);
-                 sendto(sockfd, &cordss, CSIZE, 0, (struct sockaddr *) &tsend, SIZE);
-                }
+	while(1) {
+		usleep(SLEEPWAIT);
+		sendto(sockfd, &cordss, CSIZE, 0, (struct sockaddr *) &tsend, SIZE);
+	}
 
- return NULL;
+	return NULL;
 }
 
-void * threadrecv(void * arg)
+void *
+threadrecv(void * arg)
 {
-           int sockfd, f=0;
-           //struct sockaddr_in trecv = {sizeof(trecv), AF_INET, PORT, INADDR_ANY};
-           struct sockaddr_in trecv = {AF_INET, PORT, INADDR_ANY};
+	int sockfd, f = 0;
+	//struct sockaddr_in trecv = {sizeof(trecv), AF_INET, PORT, INADDR_ANY};
+	struct sockaddr_in trecv = {AF_INET, PORT, INADDR_ANY};
 
-           sockfd=socket(AF_INET, SOCK_DGRAM, 0);
-                if(sockfd==-1){ perror("bad sock"); exit(1);}
+	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+	if (sockfd == -1) {
+		perror("bad sock");
+		exit(1);
+	}
 
-           f=bind(sockfd, (struct sockaddr *) &trecv, SIZE);
-                if(f==-1){ perror("not bound c"); close(sockfd); exit(1);}
+	f = bind(sockfd, (struct sockaddr *) &trecv, SIZE);
+	if (f == -1) {
+		perror("not bound c");
+		close(sockfd);
+		exit(1);
+	}
 
-           while(1){
-                 usleep(SLEEPWAIT);
-                 recv(sockfd, &cordsr, CSIZE, 0);
-                 //printf("\n%f,%f,%f", cordsr.x, cordsr.y, cordsr.z);
-                }
- return NULL;
+	while(1) {
+		usleep(SLEEPWAIT);
+		recv(sockfd, &cordsr, CSIZE, 0);
+		//printf("\n%f,%f,%f", cordsr.x, cordsr.y, cordsr.z);
+	}
+
+	return NULL;
 }
