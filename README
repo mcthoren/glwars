@@ -27,6 +27,10 @@ the green bar on the left is your remaining shield strength
 the blue bar on the right is your remaining pew pew!
 the wee ships up top are your remaing lives
 
+if you run:
+./glwars 127.0.0.1
+you can chase a ghost ship of yourself if you're tricky enough
+
 2016-09-25: compes and runs on linux with threads and net.
 2016-09-24: compiles and works, but w.o. threads/net
 
