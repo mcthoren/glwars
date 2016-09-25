@@ -509,7 +509,6 @@ main(int argc, char** argv)
 	pthread_t tid[2];
 	int pt0err = -86, pt1err = -87;
 
-/*
 	pt0err = pthread_create(&tid[0], NULL, threadsend, argv[1]);
 	pt1err = pthread_create(&tid[1], NULL, threadrecv, NULL);
 
@@ -522,7 +521,6 @@ main(int argc, char** argv)
 		perror("thread1 unhappy");
 		exit(1);
 	}
-*/
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
@@ -539,8 +537,8 @@ main(int argc, char** argv)
 	glutTimerFunc(3, lookmove, 1);
 	glutMainLoop();
 
-//	pthread_join(tid[0], NULL);
-//	pthread_join(tid[1], NULL);
+	pthread_join(tid[0], NULL);
+	pthread_join(tid[1], NULL);
 
 	return 0;
 } 	 
