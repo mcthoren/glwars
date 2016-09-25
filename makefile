@@ -6,7 +6,7 @@ CFLAGS=-g -Wall -Wextra
 INCDIR+=-I/usr/local/include
 LIBDIR+=-L/usr/local/lib
 
-LIBS=-lglut -lGL -lGLU -lX11 -lXmu -lm -pthread
+LIBS=-lglut -lGL -lGLU -lX11 -lm -pthread
 
 all: glwars
 
