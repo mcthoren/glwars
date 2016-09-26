@@ -503,11 +503,22 @@ kbspecial(unsigned char key, int x, int y)
 	}
 }
 
+static void
+usage(char *s)
+{
+	printf("usage: %s host\n", s);
+}
+
 int
 main(int argc, char** argv)
 {
 	pthread_t tid[2];
 	int pt0err = -86, pt1err = -87;
+
+	if (argc != 2) {
+		usage(argv[0]);
+		exit(1);
+	}
 
 	pt0err = pthread_create(&tid[0], NULL, threadsend, argv[1]);
 	pt1err = pthread_create(&tid[1], NULL, threadrecv, NULL);
