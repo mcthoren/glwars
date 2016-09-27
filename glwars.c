@@ -565,13 +565,13 @@ threadsend(void * arg)
 	tsend.sin_addr.s_addr = inet_addr((char *) arg);
 
 	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-	if (sockfd == -1) {
+	if (sockfd < 0) {
 		perror("bad sock");
 		exit(1);
 	}
 
 	e = bind(sockfd, (struct sockaddr *) &tlocal, SIZE);
-	if (e == -1) {
+	if (e < 0) {
 		perror("not bound");
 		close(sockfd);
 		exit(1);
@@ -593,13 +593,13 @@ threadrecv(void * arg)
 	struct sockaddr_in trecv = {AF_INET, PORT, INADDR_ANY};
 
 	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-	if (sockfd == -1) {
+	if (sockfd < 0) {
 		perror("bad sock");
 		exit(1);
 	}
 
 	f = bind(sockfd, (struct sockaddr *) &trecv, SIZE);
-	if (f == -1) {
+	if (f < 0) {
 		perror("not bound c");
 		close(sockfd);
 		exit(1);
