@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <strings.h>
 
 #include "glwars.h"
 
@@ -55,7 +56,6 @@
 	//int cordss = 69, cordsr = 86;
 	struct cp cordss, cordsr;
 	int CSIZE = sizeof(struct cp);
-	int SIZE = sizeof(struct sockaddr_in);
 
 void
 init(void)
@@ -555,14 +555,22 @@ main(int argc, char** argv)
 } 	 
 
 void *
-threadsend(void * arg)
+threadsend(void * addy)
 {
 	int sockfd, e = 0;
-	//struct sockaddr_in tsend = {sizeof (tsend), AF_INET, PORT};
-	struct sockaddr_in tsend = { AF_INET, PORT};
-	struct sockaddr_in tlocal = {AF_INET, INADDR_ANY, INADDR_ANY};
+	struct sockaddr_in tsend;
+	struct sockaddr_in tlocal;
 
-	tsend.sin_addr.s_addr = inet_addr((char *) arg);
+	memset(&tsend, 0, sizeof(tsend));
+	memset(&tlocal, 0, sizeof(tlocal));
+
+	tsend.sin_family = AF_INET;
+	tsend.sin_port = htons(PORT);
+	tsend.sin_addr.s_addr = inet_addr((char *) addy);
+
+	tlocal.sin_family = AF_INET;
+	tlocal.sin_port = INADDR_ANY;
+	tlocal.sin_addr.s_addr = INADDR_ANY;
 
 	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sockfd < 0) {
@@ -570,7 +578,7 @@ threadsend(void * arg)
 		exit(1);
 	}
 
-	e = bind(sockfd, (struct sockaddr *) &tlocal, SIZE);
+	e = bind(sockfd, (struct sockaddr *) &tlocal, sizeof(tlocal));
 	if (e < 0) {
 		perror("not bound");
 		close(sockfd);
@@ -579,7 +587,7 @@ threadsend(void * arg)
 
 	while(1) {
 		usleep(SLEEPWAIT);
-		sendto(sockfd, &cordss, CSIZE, 0, (struct sockaddr *) &tsend, SIZE);
+		sendto(sockfd, &cordss, CSIZE, 0, (struct sockaddr *) &tsend, sizeof(tsend));
 	}
 
 	return NULL;
@@ -589,8 +597,11 @@ void *
 threadrecv(void * arg)
 {
 	int sockfd, f = 0;
-	//struct sockaddr_in trecv = {sizeof(trecv), AF_INET, PORT, INADDR_ANY};
-	struct sockaddr_in trecv = {AF_INET, PORT, INADDR_ANY};
+	struct sockaddr_in trecv;
+	
+	memset(&trecv, 0, sizeof(trecv));
+	trecv.sin_family = AF_INET;
+	trecv.sin_port = htons(PORT);
 
 	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sockfd < 0) {
@@ -598,7 +609,7 @@ threadrecv(void * arg)
 		exit(1);
 	}
 
-	f = bind(sockfd, (struct sockaddr *) &trecv, SIZE);
+	f = bind(sockfd, (struct sockaddr *) &trecv, sizeof(trecv));
 	if (f < 0) {
 		perror("not bound c");
 		close(sockfd);
