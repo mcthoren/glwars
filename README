@@ -32,7 +32,7 @@ if you run:
 ./glwars 127.0.0.1
 you can chase a ghost ship of yourself if you're tricky enough
 
-2016-09-27: compiles and runs on operating systems that actually enforce correct memory useage! whooo!
+2016-09-27: compiles and runs on operating systems that actually enforce correct memory usage! whooo!
 2016-09-25: compiles and runs on linux with threads and net.
 2016-09-24: compiles and works, but w.o. threads/net
 2016-09-23: resurrected from a long dusty tomb 
@@ -41,5 +41,4 @@ you can chase a ghost ship of yourself if you're tricky enough
 todo:
 workout memset warnings
 better visual reference than a grid of balls
-make threads and net work on real os's again
 like, validate data, ffs
