@@ -599,7 +599,7 @@ threadsend(void * addy)
 }
 
 void *
-threadrecv(void * arg)
+threadrecv(void)
 {
 	int sockfd, f = 0;
 	struct sockaddr_in trecv;
