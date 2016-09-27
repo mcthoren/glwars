@@ -21,7 +21,8 @@ c:	toggles chase mode view
 a:	toggles autonormals
 space:	fires lasers!
 
-x, d, k: various debug funcs? 
+k, d:	hacks to deal with laser hits. should prly be done somehow better.
+x:	what the hell was i doing here? 
 
 the green bar on the left is your remaining shield strength
 the blue bar on the right is your remaining pew pew!
