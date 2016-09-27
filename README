@@ -35,5 +35,6 @@ you can chase a ghost ship of yourself if you're tricky enough
 2016-09-24: compiles and works, but w.o. threads/net
 
 todo:
-make threads and net work again
+better visual reference, also the color choosing function in call list for the ball grid is kinda wonky
+make threads and net workon real os's again
 like, validate data, ffs
