@@ -413,7 +413,7 @@ lookmove()
 		b = 2 * (cx * (ex - cordsr.x) + cy * (ey - cordsr.y) + cz * (ez - cordsr.z));
 		c = ((ex - cordsr.x) * (ex - cordsr.x)) + ((ey - cordsr.y) * (ey - cordsr.y)) + ((ez - cordsr.z) * (ez - cordsr.z)) - 5.29;
 		d = a + b + c;
-		if (d < 0) keyboard('k', 1, 1);
+		if (d < 0) keyboard('k');
 	  }
 
 	if (cordsr.hit != hit) {
@@ -438,7 +438,7 @@ lookmove()
 }
 
 void
-keyboard(unsigned char key, int x, int y)
+keyboard(unsigned char key)
 {
 	switch (key) {
 		case 27:
@@ -483,7 +483,7 @@ keyboard(unsigned char key, int x, int y)
 }
 
 void
-kbspecial(unsigned char key, int x, int y)
+kbspecial(unsigned char key)
 {
 	switch(key){
 		case GLUT_KEY_DOWN:
@@ -598,7 +598,7 @@ threadrecv(void * arg)
 {
 	int sockfd, f = 0;
 	struct sockaddr_in trecv;
-	
+
 	memset(&trecv, 0, sizeof(trecv));
 	trecv.sin_family = AF_INET;
 	trecv.sin_port = htons(PORT);
