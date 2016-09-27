@@ -31,8 +31,10 @@ if you run:
 ./glwars 127.0.0.1
 you can chase a ghost ship of yourself if you're tricky enough
 
-2016-09-25: compes and runs on linux with threads and net.
+2016-09-25: compiles and runs on linux with threads and net.
 2016-09-24: compiles and works, but w.o. threads/net
+2016-09-23: resurrected from a long dusty tomb 
+1844-05-23: got me a B in some class somewhere
 
 todo:
 better visual reference than a grid of balls
