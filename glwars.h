@@ -1,5 +1,5 @@
 void * threadsend(void *);
-void * threadrecv(void *);
+void * threadrecv(void);
 
 void init(void);
 void display(void);
