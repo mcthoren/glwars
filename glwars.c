@@ -185,9 +185,9 @@ init(void)
 	glEndList();
 
 	glNewList(BALLGRID, GL_COMPILE);
-		for (x = -150.0; x <= 150.0; x += 50) {
-			for(y = -150.0; y <= 150.0; y += 50) {
-				for(z = -150.0; z <= 150.0; z += 50) {
+		for (x = -1400.0; x <= 1400.0; x += 200) {
+			for(y = -1400.0; y <= 1400.0; y += 200) {
+				for(z = -1400.0; z <= 1400.0; z += 200) {
 					glTranslatef(x, y, z);
 					glCallList((((int) fabs((x * 7) * (y * 5) * (z))) % 6) + 1);
 					glTranslatef(-x, -y, -z);
