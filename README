@@ -37,6 +37,7 @@ you can chase a ghost ship of yourself if you're tricky enough
 1844-05-23: got me a B in some class somewhere
 
 todo:
+workout linux memset warnings
 better visual reference than a grid of balls
  also the color choosing function in glCallList() for BALLGRID is kinda wonky
 make threads and net work on real os's again
