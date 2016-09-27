@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <stdio.h>
-#include <strings.h>
+#include <string.h>
 
 #include "glwars.h"
 
@@ -472,7 +472,7 @@ keyboard(unsigned char key)
 				else
 					bary1 -= 0.050;
 			}
-			if (bary1 > 0.0) laser_time=7;
+			if (bary1 > 0.0) laser_time = 7;
 			break;
 		case 'd':
 		case 'D':
