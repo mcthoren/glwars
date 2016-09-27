@@ -60,6 +60,8 @@
 void
 init(void)
 {
+	GLint ball_iter = 1;
+
 	GLfloat mat_specularr[] = {SPEC, 0.0, 0.0, ALPH};
 	GLfloat mat_specularg[] = {0.0, SPEC, 0.0, ALPH};
 	GLfloat mat_specularb[] = {0.0, 0.0, SPEC, ALPH};
@@ -73,7 +75,7 @@ init(void)
 	GLfloat mat_diffusec[] = {0.0, DFUS, DFUS, ALPH};
 	GLfloat mat_diffusem[] = {DFUS, 0.0, DFUS, ALPH};
 	GLfloat mat_diffusey[] = {DFUS, DFUS, 0.0, ALPH};
-	
+
 	GLfloat lmodel_ambientr[] = {AMB, 0.00, 0.00, ALPH};
 	GLfloat lmodel_ambientg[] = {0.00, AMB, 0.00, ALPH};
 	GLfloat lmodel_ambientb[] = {0.00, 0.00, AMB, ALPH};
@@ -108,7 +110,7 @@ init(void)
 	ro = 0;
 	sp = 1;
 	cordss.hit = cordsr.hit = 0;
-	
+
         //glEnable (GL_BLEND);  
         //glBlendFunc (GL_SRC_ALPHA, GL_DST_ALPHA);
         glShadeModel (GL_SMOOTH); 
@@ -185,11 +187,14 @@ init(void)
 	glEndList();
 
 	glNewList(BALLGRID, GL_COMPILE);
+		ball_iter = 1;
 		for (x = -1400.0; x <= 1400.0; x += 200) {
 			for(y = -1400.0; y <= 1400.0; y += 200) {
 				for(z = -1400.0; z <= 1400.0; z += 200) {
 					glTranslatef(x, y, z);
-					glCallList((((int) fabs((x * 7) * (y * 5) * (z))) % 6) + 1);
+					glCallList(ball_iter);
+					ball_iter++;
+					if (ball_iter > 6 ) ball_iter = 1;
 					glTranslatef(-x, -y, -z);
                        		}
 			}
