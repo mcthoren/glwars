@@ -35,10 +35,9 @@
 #define PORT 		1364
 #define SLEEPWAIT	100000
 
-	GLfloat ex, ey, ez, cx, cy, cz, ro, phi, sp, a, b, c, d;
+	GLfloat ex, ey, ez, cx, cy, cz, ro, phi, sp;
 	GLfloat barrot = 0, shieldrot = 0, bary0 = 2.0, bary1 = 2.0;
-	GLint i = 1, W, H, chasetoggle = 1, autonormtoggle = 0, laser_time = 0, hit = 0, lives = 4;
-	GLint j = 0, k = 0;
+	GLint chasetoggle = 1, autonormtoggle = 0, laser_time = 0, hit = 0, lives = 4;
 
         GLfloat mat_specularshield[] = {0.00, 0.00, 0.010, ALPH2};
         GLfloat mat_diffuseshield[] = {0.0, 0.00, 0.00, ALPH2};
@@ -285,6 +284,7 @@ init(void)
 void
 display(void)
 {
+	GLint j = 0, k = 0;
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,1);
@@ -378,7 +378,8 @@ display(void)
 void
 reshape(int w, int h)
 {
-	W = w;
+	GLint H;
+
 	H = h;
 	glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 	glMatrixMode(GL_PROJECTION);
@@ -398,6 +399,7 @@ reshape(int w, int h)
 void
 lookmove()
 {
+	GLfloat a, b, c, d;
 
 	mat_specularshield[3] = sin(shieldrot);
 	mat_diffuseshield[3] = sin(shieldrot);
