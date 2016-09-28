@@ -9,6 +9,8 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
+#include <netdb.h>
+
 
 #include "glwars.h"
 
@@ -519,22 +521,33 @@ int
 main(int argc, char** argv)
 {
 	pthread_t tid[2];
-	int pt0err = -86, pt1err = -87;
+	int pt_send_err = -1, pt_recv_err = -1, gai_err = -1;
+	struct addrinfo *enemy_ai;
 
 	if (argc != 2) {
 		usage();
 	}
 
-	pt0err = pthread_create(&tid[0], NULL, threadsend, argv[1]);
-	pt1err = pthread_create(&tid[1], NULL, threadrecv, NULL);
+	gai_err = getaddrinfo(argv[1], "PORT", NULL, &enemy_ai);
 
-	if (pt0err != 0) {
-		perror("thread0 unhappy");
+	if (gai_err != 0) {
+		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(gai_err));
+		//errx(1, "%s", gai_strerror(gai_err));
+		return 2;
+	}
+
+	pt_send_err = pthread_create(&tid[0], NULL, threadsend, &enemy_ai);
+	pt_recv_err = pthread_create(&tid[1], NULL, threadrecv, &enemy_ai);
+
+	if (pt_send_err != 0) {
+		perror("send thread error");
+		freeaddrinfo(enemy_ai);
 		exit(1);
 	}
 
-	if (pt1err != 0) {
-		perror("thread1 unhappy");
+	if (pt_recv_err != 0) {
+		perror("recv thread error");
+		freeaddrinfo(enemy_ai);
 		exit(1);
 	}
 
@@ -556,70 +569,67 @@ main(int argc, char** argv)
 	pthread_join(tid[0], NULL);
 	pthread_join(tid[1], NULL);
 
+	freeaddrinfo(enemy_ai);
 	return 0;
 } 	 
 
 void *
-threadsend(void * addy)
+threadsend(void * void_enemy_ai)
 {
-	int sockfd, e = 0;
-	struct sockaddr_in tsend;
+	int sockfd, bind_err = 0;
 	struct sockaddr_in tlocal;
+	struct addrinfo *enemy_ai = (struct addrinfo *) void_enemy_ai;
 	int cords_size = sizeof(struct cp);
-	int ts_size = sizeof(tsend);
+	int enemy_sock_size = sizeof(enemy_ai->ai_addr);
 
-	memset(&tsend, 0, sizeof(tsend));
 	memset(&tlocal, 0, sizeof(tlocal));
 
-	tsend.sin_family = AF_INET;
-	tsend.sin_port = htons(PORT);
-	tsend.sin_addr.s_addr = inet_addr((char *) addy);
-
-	tlocal.sin_family = AF_INET;
+	tlocal.sin_family = enemy_ai->ai_family;
 	tlocal.sin_port = INADDR_ANY;
 	tlocal.sin_addr.s_addr = INADDR_ANY;
 
-	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+	sockfd = socket(enemy_ai->ai_family, SOCK_DGRAM, 0);
 	if (sockfd < 0) {
 		perror("bad sock");
 		exit(1);
 	}
 
-	e = bind(sockfd, (struct sockaddr *) &tlocal, sizeof(tlocal));
-	if (e < 0) {
-		perror("not bound");
+	bind_err = bind(sockfd, (struct sockaddr *) &tlocal, sizeof(tlocal));
+	if (bind_err < 0) {
+		perror("send thread unbound");
 		close(sockfd);
 		exit(1);
 	}
 
 	while(1) {
 		usleep(SLEEPWAIT);
-		sendto(sockfd, &cordss, cords_size, 0, (struct sockaddr *) &tsend, ts_size);
+		sendto(sockfd, &cordss, cords_size, 0, (struct sockaddr *) enemy_ai->ai_addr, enemy_sock_size);
 	}
 
 	return NULL;
 }
 
 void *
-threadrecv(void *arg __attribute__((__unused__)))
+threadrecv(void * void_enemy_ai)
 {
-	int sockfd, f = 0;
+	int sockfd, bind_err = 0;
 	struct sockaddr_in trecv;
+	struct addrinfo *enemy_ai = (struct addrinfo *) void_enemy_ai;
 	int cords_size = sizeof(struct cp);
 
 	memset(&trecv, 0, sizeof(trecv));
-	trecv.sin_family = AF_INET;
-	trecv.sin_port = htons(PORT);
+	trecv.sin_family = enemy_ai->ai_family;
+	trecv.sin_port = ((struct sockaddr_in *)enemy_ai->ai_addr)->sin_port;
 
-	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+	sockfd = socket(enemy_ai->ai_family, SOCK_DGRAM, 0);
 	if (sockfd < 0) {
 		perror("bad sock");
 		exit(1);
 	}
 
-	f = bind(sockfd, (struct sockaddr *) &trecv, sizeof(trecv));
-	if (f < 0) {
-		perror("not bound c");
+	bind_err = bind(sockfd, (struct sockaddr *) &trecv, sizeof(trecv));
+	if (bind_err < 0) {
+		perror("receive thread unbound");
 		close(sockfd);
 		exit(1);
 	}
