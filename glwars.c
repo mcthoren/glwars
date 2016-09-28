@@ -35,7 +35,7 @@
 #define PORT 		1364
 #define SLEEPWAIT	100000
 
-	GLfloat x, y, z, ex, ey, ez, cx, cy, cz, ux, uy, uz, ro, phi, sp, a, b, c, d; 
+	GLfloat ex, ey, ez, cx, cy, cz, ro, phi, sp, a, b, c, d;
 	GLfloat barrot = 0, shieldrot = 0, bary0 = 2.0, bary1 = 2.0;
 	GLint i = 1, W, H, chasetoggle = 1, autonormtoggle = 0, laser_time = 0, hit = 0, lives = 4;
 	GLint j = 0, k = 0;
@@ -53,13 +53,12 @@
 		GLint hit;
 	};
 
-	//int cordss = 69, cordsr = 86;
 	struct cp cordss, cordsr;
-	int CSIZE = sizeof(struct cp);
 
 void
 init(void)
 {
+	GLfloat x, y, z;
 	GLint ball_iter = 1;
 
 	GLfloat mat_specularr[] = {SPEC, 0.0, 0.0, ALPH};
@@ -104,8 +103,6 @@ init(void)
 
 	ex = ey = ez = -100;
 	cx = cy = cz = -2;
-	ux = uz = 0;
-	uy = 1;
 	phi = 45;
 	ro = 0;
 	sp = 1;
@@ -565,6 +562,8 @@ threadsend(void * addy)
 	int sockfd, e = 0;
 	struct sockaddr_in tsend;
 	struct sockaddr_in tlocal;
+	int cords_size = sizeof(struct cp);
+	int ts_size = sizeof(tsend);
 
 	memset(&tsend, 0, sizeof(tsend));
 	memset(&tlocal, 0, sizeof(tlocal));
@@ -592,7 +591,7 @@ threadsend(void * addy)
 
 	while(1) {
 		usleep(SLEEPWAIT);
-		sendto(sockfd, &cordss, CSIZE, 0, (struct sockaddr *) &tsend, sizeof(tsend));
+		sendto(sockfd, &cordss, cords_size, 0, (struct sockaddr *) &tsend, ts_size);
 	}
 
 	return NULL;
@@ -603,6 +602,7 @@ threadrecv(void *arg __attribute__((__unused__)))
 {
 	int sockfd, f = 0;
 	struct sockaddr_in trecv;
+	int cords_size = sizeof(struct cp);
 
 	memset(&trecv, 0, sizeof(trecv));
 	trecv.sin_family = AF_INET;
@@ -623,7 +623,7 @@ threadrecv(void *arg __attribute__((__unused__)))
 
 	while(1) {
 		usleep(SLEEPWAIT);
-		recv(sockfd, &cordsr, CSIZE, 0);
+		recv(sockfd, &cordsr, cords_size, 0);
 		//printf("\n%f,%f,%f", cordsr.x, cordsr.y, cordsr.z);
 	}
 
