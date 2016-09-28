@@ -508,9 +508,11 @@ kbspecial(int key, int x __attribute__((__unused__)), int y __attribute__((__unu
 }
 
 static void
-usage(char *s)
+usage(void)
 {
-	printf("usage: %s host\n", s);
+	extern char *__progname;        /* from crt0.o */
+	(void) fprintf(stderr, "usage: %s host\n", __progname);
+	exit(1);
 }
 
 int
@@ -520,8 +522,7 @@ main(int argc, char** argv)
 	int pt0err = -86, pt1err = -87;
 
 	if (argc != 2) {
-		usage(argv[0]);
-		exit(1);
+		usage();
 	}
 
 	pt0err = pthread_create(&tid[0], NULL, threadsend, argv[1]);
