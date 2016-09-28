@@ -418,7 +418,7 @@ lookmove()
 		b = 2 * (cx * (ex - cordsr.x) + cy * (ey - cordsr.y) + cz * (ez - cordsr.z));
 		c = ((ex - cordsr.x) * (ex - cordsr.x)) + ((ey - cordsr.y) * (ey - cordsr.y)) + ((ez - cordsr.z) * (ez - cordsr.z)) - 5.29;
 		d = a + b + c;
-		if (d < 0) keyboard('k');
+		if (d < 0) keyboard('k', 1, 1);
 	  }
 
 	if (cordsr.hit != hit) {
@@ -443,7 +443,7 @@ lookmove()
 }
 
 void
-keyboard(unsigned char key)
+keyboard(unsigned char key, int x __attribute__((__unused__)), int y __attribute__((__unused__)))
 {
 	switch (key) {
 		case 27:
@@ -488,7 +488,7 @@ keyboard(unsigned char key)
 }
 
 void
-kbspecial(unsigned char key)
+kbspecial(int key, int x __attribute__((__unused__)), int y __attribute__((__unused__)))
 {
 	switch(key){
 		case GLUT_KEY_DOWN:
@@ -599,7 +599,7 @@ threadsend(void * addy)
 }
 
 void *
-threadrecv(void)
+threadrecv(void *arg __attribute__((__unused__)))
 {
 	int sockfd, f = 0;
 	struct sockaddr_in trecv;
