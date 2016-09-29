@@ -34,7 +34,7 @@
 #define ALPH1		1.00
 #define ALPH2		0.70
 #define SHIN		100.0
-#define PORT 		1364
+#define PORT 		1309
 #define SLEEPWAIT	100000
 
 	GLfloat ex, ey, ez, cx, cy, cz, ro, phi, sp;
@@ -528,7 +528,7 @@ main(int argc, char** argv)
 		usage();
 	}
 
-	gai_err = getaddrinfo(argv[1], "PORT", NULL, &enemy_ai);
+	gai_err = getaddrinfo(argv[1], "1309", NULL, &enemy_ai);
 
 	if (gai_err != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(gai_err));
@@ -536,8 +536,11 @@ main(int argc, char** argv)
 		return 2;
 	}
 
-	pt_send_err = pthread_create(&tid[0], NULL, threadsend, &enemy_ai);
-	pt_recv_err = pthread_create(&tid[1], NULL, threadrecv, &enemy_ai);
+	printf("addr_2:\t%s\n", inet_ntoa(((struct sockaddr_in *)enemy_ai->ai_addr)->sin_addr));
+	printf("port:\t%d\n", ntohs(((struct sockaddr_in *)enemy_ai->ai_addr)->sin_port));
+
+	pt_send_err = pthread_create(&tid[0], NULL, threadsend, enemy_ai);
+	pt_recv_err = pthread_create(&tid[1], NULL, threadrecv, enemy_ai);
 
 	if (pt_send_err != 0) {
 		perror("send thread error");
@@ -582,6 +585,10 @@ threadsend(void * void_enemy_ai)
 	int cords_size = sizeof(struct cp);
 	int enemy_sock_size = sizeof(enemy_ai->ai_addr);
 
+	printf("addr_s:\t%s\n", inet_ntoa(((struct sockaddr_in *)enemy_ai->ai_addr)->sin_addr));
+	printf("port:\t%d\n", ntohs(((struct sockaddr_in *)enemy_ai->ai_addr)->sin_port));
+	fflush(stdout);
+
 	memset(&tlocal, 0, sizeof(tlocal));
 
 	tlocal.sin_family = enemy_ai->ai_family;
@@ -616,6 +623,10 @@ threadrecv(void * void_enemy_ai)
 	struct sockaddr_in trecv;
 	struct addrinfo *enemy_ai = (struct addrinfo *) void_enemy_ai;
 	int cords_size = sizeof(struct cp);
+
+	printf("addr_r:\t%s\n", inet_ntoa(((struct sockaddr_in *)enemy_ai->ai_addr)->sin_addr));
+	printf("port:\t%d\n", ntohs(((struct sockaddr_in *)enemy_ai->ai_addr)->sin_port));
+	fflush(stdout);
 
 	memset(&trecv, 0, sizeof(trecv));
 	trecv.sin_family = enemy_ai->ai_family;
