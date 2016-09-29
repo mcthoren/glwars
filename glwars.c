@@ -34,7 +34,7 @@
 #define ALPH1		1.00
 #define ALPH2		0.70
 #define SHIN		100.0
-#define PORT		1309
+#define PORT		"1309"
 #define SLEEPWAIT	100000
 
 	GLfloat ex, ey, ez, cx, cy, cz, ro, phi, sp;
@@ -527,7 +527,7 @@ main(int argc, char** argv)
 		usage();
 	}
 
-	gai_err = getaddrinfo(argv[1], "1309", NULL, &enemy_ai);
+	gai_err = getaddrinfo(argv[1], PORT, NULL, &enemy_ai);
 
 	if (gai_err != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(gai_err));
