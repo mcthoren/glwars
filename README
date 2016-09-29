@@ -32,6 +32,7 @@ if you run:
 ./glwars 127.0.0.1
 you can chase a ghost ship of yourself if you're tricky enough
 
+2016-09-29: networking brought closer to the modern..ish day
 2016-09-27: compiles and runs on operating systems that actually enforce correct memory usage! whooo!
 2016-09-25: compiles and runs on linux with threads and net.
 2016-09-24: compiles and works, but w.o. threads/net
@@ -40,4 +41,5 @@ you can chase a ghost ship of yourself if you're tricky enough
 
 todo:
 better visual reference than a grid of balls
-like, validate data, ffs
+rolls
+flips - lookmove() should allow full 2pi for ro.
