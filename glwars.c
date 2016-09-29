@@ -534,7 +534,7 @@ main(int argc, char** argv)
 		return 2;
 	}
 
-	printf("addr_2:\t%s\n", inet_ntoa(((struct sockaddr_in *)enemy_ai->ai_addr)->sin_addr));
+	printf("addr:\t%s\n", inet_ntoa(((struct sockaddr_in *)enemy_ai->ai_addr)->sin_addr));
 	printf("port:\t%d\n", ntohs(((struct sockaddr_in *)enemy_ai->ai_addr)->sin_port));
 
 	pt_send_err = pthread_create(&tid[0], NULL, threadsend, enemy_ai);
@@ -591,8 +591,8 @@ threadsend(void * void_enemy_ai)
 	tlocal.sin_port = INADDR_ANY;
 	tlocal.sin_addr.s_addr = INADDR_ANY;
 
-	tsend.sin_family = AF_INET;
-	tsend.sin_port = htons(PORT);
+	tsend.sin_family = enemy_ai->ai_family;
+	tsend.sin_port = ((struct sockaddr_in *)enemy_ai->ai_addr)->sin_port;
 	tsend.sin_addr = (((struct sockaddr_in *)enemy_ai->ai_addr)->sin_addr);
 
 	sockfd = socket(enemy_ai->ai_family, SOCK_DGRAM, 0);
