@@ -40,6 +40,7 @@ you can chase a ghost ship of yourself if you're tricky enough
 1844-05-23: got me a B in some class somewhere
 
 todo:
+full ipv6 support, should be just a few parts
 better visual reference than a grid of balls
 rolls
 flips - lookmove() should allow full 2pi for ro.
