@@ -10,7 +10,7 @@ c) and i mostly wanted to fly a little space ship around and shoot lasers!
 
 i have to imagine the name glwars has been used at least a bazillion times previously to this
 
-i though i would revisit it and see if could update it a bit.
+i thought i would revisit it and see if could update it a bit.
 this was originally written for irix, on an sgi o2.
 it currently reflects some pretty poor coding practices :<
 
@@ -26,7 +26,7 @@ x:	what the hell was i doing here?
 
 the green bar on the left is your remaining shield strength
 the blue bar on the right is your remaining pew pew!
-the wee ships up top are your remaing lives
+the wee ships up top are your reaming lives
 
 if you run:
 ./glwars 127.0.0.1
