@@ -1,5 +1,5 @@
 glwars is a student project from waaaaaay back in the days when i was wee.
-if my memory servers me correctly, this was done during my time at the Prussian Academy of Automatic Machines, ca. ~1844.
+if my memory serves me correctly, this was done during my time at the Prussian Academy of Automatic Machines, ca. 1844.
 
 you get to fly a little ship and shoot lasers at one other person in a little ship on your lan!
 
@@ -12,17 +12,17 @@ i have to imagine the name glwars has been used at least a bazillion times previ
 
 i thought i would revisit it and see if could update it a bit.
 this was originally written for irix, on an sgi o2.
-it currently reflects some pretty poor coding practices :<
+the code is slowly being improved.
 
 keyboard commands:
 arrow keys move
 q:	quits 
 c:	toggles chase mode view
 a:	toggles autonormals
+x:	increase speed by increments of a lot
 space:	fires lasers!
 
 k, d:	hacks to deal with laser hits. should prly be done somehow better.
-x:	what the hell was i doing here? 
 
 the green bar on the left is your remaining shield strength
 the blue bar on the right is your remaining pew pew!
@@ -32,15 +32,17 @@ if you run:
 ./glwars 127.0.0.1
 you can chase a ghost ship of yourself if you're tricky enough
 
+2022-02-17: got the first stab at ipv6 in.
 2016-09-29: networking brought closer to the modern..ish day
 2016-09-27: compiles and runs on operating systems that actually enforce correct memory usage! whooo!
 2016-09-25: compiles and runs on linux with threads and net.
 2016-09-24: compiles and works, but w.o. threads/net
 2016-09-23: resurrected from a long dusty tomb 
-1844-05-23: got me a B in some class somewhere
+2004-05-23: got me a B in some class somewhere
 
 todo:
-full ipv6 support, should be just a few parts
+better ipv6 support, use struct sockaddr storage to avoid some duplication
 better visual reference than a grid of balls
 rolls
 flips - lookmove() should allow full 2pi for ro.
+i'm not sure the ships are moving independent of the other person's frame anymore :x
