@@ -14,46 +14,21 @@
 
 #include "glwars.h"
 
-#define BALLB		1
-#define BALLR		2
-#define BALLG		3
-#define BALLM		4
-#define BALLY		5
-#define BALLC		6
-#define BALLGRID	7
-#define SHIP		8
-#define BAR		9
-#define BAR1		10
-#define SHIP1		11
-#define BALLSLICE	16
-#define BALLSTACK	16
-#define AMB		1.0
-#define DFUS    	0.50
-#define SPEC		1.00
-#define ALPH		1.00
-#define ALPH1		1.00
-#define ALPH2		0.70
-#define SHIN		100.0
-#define PORT		"1309"
-#define SLEEPWAIT	100000
+GLfloat ex, ey, ez, cx, cy, cz, ro, phi, sp;
+GLfloat barrot = 0, shieldrot = 0, bary0 = 2.0, bary1 = 2.0;
+GLint chasetoggle = 1, autonormtoggle = 0, laser_time = 0, hit = 0, lives = 4;
 
-	GLfloat ex, ey, ez, cx, cy, cz, ro, phi, sp;
-	GLfloat barrot = 0, shieldrot = 0, bary0 = 2.0, bary1 = 2.0;
-	GLint chasetoggle = 1, autonormtoggle = 0, laser_time = 0, hit = 0, lives = 4;
+GLfloat mat_specularshield[] = {0.00, 0.00, 0.010, ALPH2};
+GLfloat mat_diffuseshield[] = {0.0, 0.00, 0.00, ALPH2};
+GLfloat lmodel_ambientshield[] = {0.0, 0.90, 0.00, ALPH2};
+GLfloat mat_shininesshield[] = {30};
 
-        GLfloat mat_specularshield[] = {0.00, 0.00, 0.010, ALPH2};
-        GLfloat mat_diffuseshield[] = {0.0, 0.00, 0.00, ALPH2};
-        GLfloat lmodel_ambientshield[] = {0.0, 0.90, 0.00, ALPH2};
-        GLfloat mat_shininesshield[] = {30};
-
-	struct cp{
-		GLfloat x;
-		GLfloat y;
-		GLfloat z;
-		GLint hit;
-	};
-
-	struct cp cordss, cordsr;
+struct cp{
+	GLfloat x;
+	GLfloat y;
+	GLfloat z;
+	GLint hit;
+};
 
 void
 init(void)
