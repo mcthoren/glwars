@@ -1,6 +1,6 @@
 INCDIR=-I/usr/X11R6/include
 LIBDIR=-L/usr/X11R6/lib
-COMP=gcc
+COMP=cc
 CFLAGS=-g -Wall -Wextra
 
 INCDIR+=-I/usr/local/include
@@ -14,4 +14,5 @@ glwars: glwars.c glwars.h
 	$(COMP) $(CFLAGS) $(INCDIR) $(LIBDIR) -o glwars glwars.c $(LIBS) $(OPTS)
 
 clean:
-	rm glwars
+	if [ -e glwars ]; then rm glwars; fi
+	if [ -e glwars.core ]; then rm glwars.core; fi
