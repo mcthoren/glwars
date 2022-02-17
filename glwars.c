@@ -522,6 +522,7 @@ main(int argc, char** argv)
 	pthread_t tid[2];
 	int pt_send_err = -1, pt_recv_err = -1, gai_err = -1;
 	struct addrinfo *enemy_ai;
+	char ip[INET6_ADDRSTRLEN];
 
 	if (argc != 2) {
 		usage();
@@ -534,7 +535,15 @@ main(int argc, char** argv)
 		return 2;
 	}
 
-	printf("addr:\t%s\n", inet_ntoa(((struct sockaddr_in *)enemy_ai->ai_addr)->sin_addr));
+	if (enemy_ai->ai_family == AF_INET) {
+		printf("addr:\t%s\n", inet_ntop(AF_INET, &((struct sockaddr_in *)enemy_ai->ai_addr)->sin_addr, ip, INET6_ADDRSTRLEN));
+	} else if (enemy_ai->ai_family == AF_INET6) {
+		printf("addr:\t%s\n", inet_ntop(AF_INET6, &((struct sockaddr_in6 *)enemy_ai->ai_addr)->sin6_addr, ip, INET6_ADDRSTRLEN));
+	} else {
+		perror("invalid address family");
+		freeaddrinfo(enemy_ai);
+		exit(1);
+	}
 	printf("port:\t%d\n", ntohs(((struct sockaddr_in *)enemy_ai->ai_addr)->sin_port));
 
 	pt_send_err = pthread_create(&tid[0], NULL, threadsend, enemy_ai);
@@ -579,6 +588,7 @@ threadsend(void * void_enemy_ai)
 {
 	int sockfd, bind_err = 0;
 	struct sockaddr_in tsend, tlocal;
+	struct sockaddr_in6 tsend6, tlocal6;
 
 	struct addrinfo *enemy_ai = (struct addrinfo *) void_enemy_ai;
 	int ts_size = sizeof(tsend);
@@ -586,14 +596,28 @@ threadsend(void * void_enemy_ai)
 
 	memset(&tlocal, 0, sizeof(tlocal));
 	memset(&tsend, 0, sizeof(tsend));
+	memset(&tlocal6, 0, sizeof(tlocal6));
+	memset(&tsend6, 0, sizeof(tsend6));
 
-	tlocal.sin_family = enemy_ai->ai_family;
-	tlocal.sin_port = INADDR_ANY;
-	tlocal.sin_addr.s_addr = INADDR_ANY;
+	if (enemy_ai->ai_family == AF_INET) {
+		tlocal.sin_family = enemy_ai->ai_family;
+		tlocal.sin_port = INADDR_ANY;
+		tlocal.sin_addr.s_addr = INADDR_ANY;
 
-	tsend.sin_family = enemy_ai->ai_family;
-	tsend.sin_port = ((struct sockaddr_in *)enemy_ai->ai_addr)->sin_port;
-	tsend.sin_addr = (((struct sockaddr_in *)enemy_ai->ai_addr)->sin_addr);
+		tsend.sin_family = enemy_ai->ai_family;
+		tsend.sin_port = ((struct sockaddr_in *)enemy_ai->ai_addr)->sin_port;
+		tsend.sin_addr = (((struct sockaddr_in *)enemy_ai->ai_addr)->sin_addr);
+	}
+
+	if (enemy_ai->ai_family == AF_INET6) {
+		tlocal6.sin6_family = enemy_ai->ai_family;
+		tlocal6.sin6_port = INADDR_ANY;
+		// tlocal6.sin6_addr.s6_addr = INADDR_ANY;
+
+		tsend6.sin6_family = enemy_ai->ai_family;
+		tsend6.sin6_port = ((struct sockaddr_in6 *)enemy_ai->ai_addr)->sin6_port;
+		tsend6.sin6_addr = (((struct sockaddr_in6 *)enemy_ai->ai_addr)->sin6_addr);
+	}
 
 	sockfd = socket(enemy_ai->ai_family, SOCK_DGRAM, 0);
 	if (sockfd < 0) {
@@ -601,7 +625,14 @@ threadsend(void * void_enemy_ai)
 		exit(1);
 	}
 
-	bind_err = bind(sockfd, (struct sockaddr *) &tlocal, sizeof(tlocal));
+	if (enemy_ai->ai_family == AF_INET) {
+		bind_err = bind(sockfd, (struct sockaddr *) &tlocal, sizeof(tlocal));
+	}
+
+	if (enemy_ai->ai_family == AF_INET6) {
+		bind_err = bind(sockfd, (struct sockaddr *) &tlocal6, sizeof(tlocal6));
+	}
+
 	if (bind_err < 0) {
 		perror("send thread unbound");
 		close(sockfd);
@@ -622,13 +653,23 @@ threadrecv(void * void_enemy_ai)
 {
 	int sockfd, bind_err = 0;
 	struct sockaddr_in trecv;
+	struct sockaddr_in6 trecv6;
 
 	struct addrinfo *enemy_ai = (struct addrinfo *) void_enemy_ai;
 	int cords_size = sizeof(struct cp);
 
 	memset(&trecv, 0, sizeof(trecv));
-	trecv.sin_family = enemy_ai->ai_family;
-	trecv.sin_port = ((struct sockaddr_in *)enemy_ai->ai_addr)->sin_port;
+	memset(&trecv6, 0, sizeof(trecv6));
+
+	if (enemy_ai->ai_family == AF_INET) {
+		trecv.sin_family = enemy_ai->ai_family;
+		trecv.sin_port = ((struct sockaddr_in *)enemy_ai->ai_addr)->sin_port;
+	}
+
+	if (enemy_ai->ai_family == AF_INET6) {
+		trecv6.sin6_family = enemy_ai->ai_family;
+		trecv6.sin6_port = ((struct sockaddr_in6 *)enemy_ai->ai_addr)->sin6_port;
+	}
 
 	sockfd = socket(enemy_ai->ai_family, SOCK_DGRAM, 0);
 	if (sockfd < 0) {
@@ -636,7 +677,14 @@ threadrecv(void * void_enemy_ai)
 		exit(1);
 	}
 
-	bind_err = bind(sockfd, (struct sockaddr *) &trecv, sizeof(trecv));
+	if (enemy_ai->ai_family == AF_INET) {
+		bind_err = bind(sockfd, (struct sockaddr *) &trecv, sizeof(trecv));
+	}
+
+	if (enemy_ai->ai_family == AF_INET6) {
+		bind_err = bind(sockfd, (struct sockaddr *) &trecv6, sizeof(trecv6));
+	}
+
 	if (bind_err < 0) {
 		perror("receive thread unbound");
 		close(sockfd);
