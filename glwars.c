@@ -538,9 +538,7 @@ main(int argc, char** argv)
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
-	//glutInitWindowSize(600, 500);
-	//glutInitWindowPosition(212, 134);
-	glutInitWindowSize(1024, 768);
+	glutInitWindowSize(1200, 730);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow(argv[0]);
 	init();
