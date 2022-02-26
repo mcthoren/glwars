@@ -21,8 +21,6 @@
 #define PORT		"1309"
 #define SLEEPWAIT	100000
 
-struct cp cordss, cordsr;
-
 void * threadsend(void *);
 void * threadrecv(void *);
 

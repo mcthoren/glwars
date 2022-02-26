@@ -23,11 +23,27 @@ GLfloat mat_diffuseshield[] = {0.0, 0.00, 0.00, ALPH2};
 GLfloat lmodel_ambientshield[] = {0.0, 0.90, 0.00, ALPH2};
 GLfloat mat_shininesshield[] = {30};
 
+pthread_rwlock_t cordss_lock, cordsr_lock;
+
 struct cp{
 	GLfloat x;
 	GLfloat y;
 	GLfloat z;
 	GLint hit;
+};
+
+// coorindates{sent,recvd}_{,temp,used}
+struct cp cordss, cordsr, cordsr_t, cordsr_u = {
+	.x = 0,
+	.y = 0,
+	.z = 0,
+	.hit = 0,
+};
+
+// timeout for the coordinates received lock
+struct timespec cordsr_l_to = {
+	.tv_sec = 0,
+	.tv_nsec = 1000,
 };
 
 void
@@ -297,7 +313,11 @@ display(void)
 		glLoadIdentity();
 	}
 	
-	glTranslatef(cordsr.x, cordsr.y, cordsr.z);
+	if (pthread_rwlock_timedrdlock(&cordsr_lock, &cordsr_l_to) == 0) {
+		cordsr_u = cordsr;
+		pthread_rwlock_unlock(&cordsr_lock);
+	}
+	glTranslatef(cordsr_u.x, cordsr_u.y, cordsr_u.z);
 	glCallList(SHIP1);
 	glLoadIdentity();
 
@@ -430,6 +450,10 @@ keyboard(unsigned char key, int x __attribute__((__unused__)), int y __attribute
 		case 'X':
 			sp += 0.030;
 			break;
+		case 's':
+		case 'S':
+			sp -= 0.030;
+			break;
 		case 'c':
 		case 'C':
 			if (chasetoggle == 0) chasetoggle = 1;
@@ -503,6 +527,9 @@ main(int argc, char** argv)
 		usage();
 	}
 
+	pthread_rwlock_init(&cordss_lock, NULL);
+	pthread_rwlock_init(&cordsr_lock, NULL);
+
 	gai_err = getaddrinfo(argv[1], PORT, NULL, &enemy_ai);
 
 	if (gai_err != 0) {
@@ -553,6 +580,8 @@ main(int argc, char** argv)
 	pthread_join(tid[1], NULL);
 
 	freeaddrinfo(enemy_ai);
+	pthread_rwlock_destroy(&cordss_lock);
+	pthread_rwlock_destroy(&cordsr_lock);
 	return 0;
 } 	 
 
@@ -614,7 +643,9 @@ threadsend(void * void_enemy_ai)
 
 	while(1) {
 		usleep(SLEEPWAIT);
+		// pthread_rwlock_rdlock(&cordss_lock);
 		sendto(sockfd, &cordss, cords_size, 0, (struct sockaddr *) &tsend, ts_size);
+		// pthread_rwlock_unlock(&cordss_lock);
 		// printf("\nsent:\t%f, %f, %f", cordsr.x, cordsr.y, cordsr.z);
 	}
 
@@ -665,9 +696,12 @@ threadrecv(void * void_enemy_ai)
 	}
 
 	while(1) {
-		usleep(SLEEPWAIT);
-		recv(sockfd, &cordsr, cords_size, 0);
-		// printf("\nrecv:\t%f, %f, %f", cordsr.x, cordsr.y, cordsr.z);
+		usleep(SLEEPWAIT - 1000);
+		recv(sockfd, &cordsr_t, cords_size, 0);
+		pthread_rwlock_wrlock(&cordsr_lock);
+		cordsr = cordsr_t;
+		pthread_rwlock_unlock(&cordsr_lock);
+		printf("\nrecv:\t%f, %f, %f", cordsr.x, cordsr.y, cordsr.z);
 	}
 
 	return NULL;
