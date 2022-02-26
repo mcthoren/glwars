@@ -10,7 +10,7 @@ LIBS=-lglut -lGL -lGLU -lX11 -lm -pthread
 
 all: glwars
 
-glwars: glwars.c glwars.h
+glwars: glwars.c
 	$(COMP) $(CFLAGS) $(INCDIR) $(LIBDIR) -o glwars glwars.c $(LIBS) $(OPTS)
 
 clean:
